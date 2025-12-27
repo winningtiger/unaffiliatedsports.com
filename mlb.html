@@ -1,0 +1,1343 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <title>MLB - Unaffiliated Sports</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="manifest" href="/images/site.webmanifest">
+  <style>
+    :root{
+      --bg:#f7f8fa; --card:#ffffff; --muted:#6b7280; --text:#111827;
+      --primary:#2563eb; --primary-hover:#1d4ed8;
+      --green:#059669; --red:#dc2626; --amber:#b45309; --gray:#9ca3af; --border:#e5e7eb;
+      --row-select:#eef2ff; --table-stripe:#fafafa;
+    }
+    [data-theme="dark"]{
+      --bg:#0b0f14; --card:#0f141a; --muted:#94a3b8; --text:#e5e7eb;
+      --primary:#3b82f6; --primary-hover:#2563eb;
+      --green:#22c55e; --red:#f87171; --amber:#f59e0b; --gray:#64748b; --border:#1f2937;
+      --row-select:#0b1b34; --table-stripe:#0d1218;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;line-height:1.45}
+    header{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--border);padding:14px 16px;z-index:10}
+    header .row{display:flex;align-items:center;gap:12px;justify-content:space-between;max-width:1100px;margin:0 auto}
+    h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);font-size:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);background:var(--card);padding:8px 12px;border-radius:10px;font-weight:600;cursor:pointer;color:var(--text)}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .btn.primary:hover{background:var(--primary-hover)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .danger{background:#fff1f2;border:1px solid #fecaca;color:#991b1b}
+    [data-theme="dark"] .danger{background:#2a0e12;border-color:#7a2e35;color:#ffb4b4}
+    .container{max: width 100%;px;margin:18px auto;padding:0 16px}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+    .card h2{margin:0 0 10px 0;font-size:16px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+    input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:white;color:#111827}
+    [data-theme="dark"] input,[data-theme="dark"] select,[data-theme="dark"] textarea{background:#0c1116;color:#e5e7eb;border-color:#243041}
+    textarea{min-height:80px;resize:vertical}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .stats{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:600px){.stats{grid-template-columns:repeat(3,1fr)}}
+    .stat{border:1px solid var(--border);background:var(--card);border-radius:14px;padding:14px}
+    .stat .k{font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+    .stat .v{
+      font-weight:800;font-size:24px;margin-top:6px;
+      white-space:nowrap;          /* keep +€123 on one line */
+      word-break:keep-all;         /* avoid breaking between symbols */
+    }
+    .stat .sub{font-size:11px;margin-top:2px;color:var(--muted)}
+    .profit-pos{color:var(--green)} .profit-neg{color:var(--red)} .profit-zero{color:var(--muted)}
+    .filters{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:900px){.filters{grid-template-columns:180px 180px 1fr 120px}}
+    table{width:100%;border-collapse:separate;border-spacing:0}
+    thead th{font-size:12px;color:var(--muted);text-align:left;padding:10px;border-bottom:1px solid var(--border);user-select:none;cursor:default;position:sticky;top:0;background:var(--card);z-index:1}
+    thead th.sortable{cursor:pointer}
+    tbody td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top}
+    tbody tr{background:var(--card)}
+    tbody tr:nth-child(even){background:var(--table-stripe)}
+    tbody tr.won{box-shadow:inset 4px 0 var(--green)} 
+    tbody tr.lost{box-shadow:inset 4px 0 var(--red)}
+    tbody tr.pending{box-shadow:inset 4px 0 var(--amber)}
+    tbody tr.push{box-shadow:inset 4px 0 var(--gray)}
+    tbody tr.selected{outline:2px solid var(--primary);outline-offset:-2px;background:var(--row-select)}
+    .actions button{background:none;border:0;padding:6px 8px;border-radius:8px;cursor:pointer;color:inherit}
+    .actions button:hover{background:#f3f4f6}
+    [data-theme="dark"] .actions button:hover{background:#121922}
+    .muted{color:var(--muted)}
+    .calc{font-size:12px;color:var(--muted);display:grid;gap:4px;margin-top:6px}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#f3f4f6;color:#374151;font-size:12px}
+    [data-theme="dark"] .pill{background:#0c1116;color:#cbd5e1;border:1px solid #1f2937}
+    .footer-note{font-size:11px;color:var(--muted);margin-top:10px}
+    .section-title{font-weight:700;margin:8px 0 4px 0}
+    .nowrap{white-space:nowrap}
+    .right{text-align:right}
+    .overflow{max-height:480px;overflow:auto;border:1px solid var(--border);border-radius:12px}
+    .charts-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.charts-grid{grid-template-columns:1fr 1fr}}
+    .chart-wrap{border:1px solid var(--border);border-radius:12px;padding:10px;background:var(--card)}
+    .chart-title{font-size:12px;color:var(--muted);margin:0 0 6px 2px}
+    canvas{width:100%;height:240px;display:block}
+    .settings{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+    .seg{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .seg button{border:0;background:var(--card);color:inherit;padding:6px 10px;font-weight:600;cursor:pointer}
+    .seg button.active{background:#eef2ff;color:#1d4ed8}
+    [data-theme="dark"] .seg button.active{background:#102a55;color:#93c5fd}
+    .dropzone{border:2px dashed var(--border);border-radius:12px;padding:14px;text-align:center;color:var(--muted)}
+    .dropzone.dragover{background:#f9fafb;border-color:var(--primary);color:var(--primary)}
+    [data-theme="dark"] .dropzone.dragover{background:#0c1116}
+    .banner{border:1px solid var(--border);border-radius:12px;padding:10px;margin-top:12px;display:flex;gap:8px;align-items:center}
+    .banner.success{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+    .banner.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+    .banner.error{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+    [data-theme="dark"] .banner.success{background:#022a1c;border-color:#0b4d33;color:#b9f6d0}
+    [data-theme="dark"] .banner.warn{background:#2b2104;border-color:#5a4706;color:#f9e8b1}
+    [data-theme="dark"] .banner.error{background:#2d0e12;border-color:#7a2e35;color:#ffb4b4}
+    .report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .report-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:8px}
+    .report-table th,.report-table td{border-bottom:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#f3f4f6;border:1px solid var(--border);border-radius:6px;padding:0 6px;font-size:12px}
+    [data-theme="dark"] .kbd{background:#0c1116;border-color:#243041;color:#e5e7eb}
+    .hint{color:#374151}
+    [data-theme="dark"] .hint{color:#cbd5e1}
+    .mini-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:8px;font-size:12px}
+    .mini-table th,.mini-table td{border-bottom:1px solid var(--border);padding:6px 8px;text-align:left}
+    .header-actions{position:relative}
+    .menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px;display:none;box-shadow:0 10px 20px rgba(0,0,0,.08);min-width:160px;z-index:20}
+    .menu.show{display:block}
+    .menu button{display:block;width:100%;text-align:left;padding:8px 10px;border:0;background:transparent;color:inherit;border-radius:8px}
+    .menu button:hover{background:#f3f4f6}
+    [data-theme="dark"] .menu button:hover{background:#121922}
+    .menu button.active{background:#eef2ff;color:#1d4ed8}
+    [data-theme="dark"] .menu button.active{background:#102a55;color:#93c5fd}
+    
+    /* Full-width tables */
+.full-width {
+  max-width: 100% !important;
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+  </style>
+</head>
+<body>
+  <!-- header -->
+  <header>
+    <div class="row">
+      <div>
+        <h1>Unaffiliated Sports</h1>
+        <div class="sub"></div>
+      </div>
+    <center>     
+    <div class="topnav">
+     <a href="https://unaffiliatedsports.com">TRACKER</a>
+     <a href="betmap.html">BET MAP</a>
+     <a href="b1.html">B1</a>
+     <a href="cba.html">CBA</a>
+     <a href="lmp.html">LMP</a>
+     <a class="active" href="mlb.html">MLB</a>
+     <a href="nba.html">NBA</a>
+     <a href="ncaab.html">NCAAB (D-1)</a>
+     <a href="ncaaf.html">NCAAF (FBS)</a>
+     <a href="nfl.html">NFL</a>
+    </div> 
+    </center>
+      <div class="header-actions">
+        <button type="button" id="themeBtn" class="btn" aria-haspopup="true" aria-expanded="false" aria-controls="themeDropdown">
+          Theme: <span id="themeLabel" style="margin-left:6px">Auto</span>
+        </button>
+        <div id="themeDropdown" class="menu" role="menu" aria-hidden="true">
+          <button type="button" data-theme="light">☀️ Light</button>
+          <button type="button" data-theme="auto" class="active">🌓 Auto</button>
+          <button type="button" data-theme="dark">🌙 Dark</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+<div data-widget-type="entityScores" data-entity-type="league" data-entity-id="438" data-lang="en" data-widget-id="915fd211-00e9-44f7-aac7-9208688d07e8" data-theme="dark"></div>
+<div id="powered-by">Powered by<a id="powered-by-link" href="https://www.365scores.com" target="_blank">365Scores.com</a></div>
+<script src="https://widgets.365scores.com/main.js"></script>
+
+  <script>
+    const STORAGE_KEY = "sportsBetTrackerData";
+    const SETTINGS_KEY = "sportsBetTrackerSettings";
+    const CSV_HEADERS = ["id","date","sport","league","bookmaker","betType","description","originalOddsFormat","originalOddsValue","decimalOdds","stake","resultStatus","profit","tags"];
+    const APP_SCHEMA_VERSION = 2;
+
+    let bets = [];
+    let settings = { currencySymbol: "$", theme: "auto", views: [] };
+    let sortState = { key: "date", dir: "desc" };
+    let editingId = null;
+    let selectedId = null;
+    let datePreset = "all";
+    let importMode = "strict";
+    let lastReport = { summary:"", severity:"success", rows:[] };
+    let sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const els = {
+      date: document.getElementById("date"),
+      sport: document.getElementById("sport"),
+      league: document.getElementById("league"),
+      bookmaker: document.getElementById("bookmaker"),
+      betType: document.getElementById("betType"),
+      description: document.getElementById("description"),
+      oddsFormat: document.getElementById("oddsFormat"),
+      oddsValue: document.getElementById("oddsValue"),
+      stake: document.getElementById("stake"),
+      resultStatus: document.getElementById("resultStatus"),
+      tags: document.getElementById("tags"),
+      submitBtn: document.getElementById("submitBtn"),
+      cancelEditBtn: document.getElementById("cancelEditBtn"),
+      clearFormBtn: document.getElementById("clearFormBtn"),
+      calcProb: document.getElementById("calcProb"),
+      calcPayout: document.getElementById("calcPayout"),
+      calcProfit: document.getElementById("calcProfit"),
+      tbody: document.getElementById("tbody"),
+      stats: document.getElementById("stats"),
+      bySport: document.getElementById("bySport"),
+      filterSport: document.getElementById("filterSport"),
+      filterResult: document.getElementById("filterResult"),
+      filterSearch: document.getElementById("filterSearch"),
+      clearFiltersBtn: document.getElementById("clearFiltersBtn"),
+      savedViewsSelect: document.getElementById("savedViewsSelect"),
+      saveViewBtn: document.getElementById("saveViewBtn"),
+      loadViewBtn: document.getElementById("loadViewBtn"),
+      deleteViewBtn: document.getElementById("deleteViewBtn"),
+      exportBtn: document.getElementById("exportBtn"),
+      showExportTextBtn: document.getElementById("showExportTextBtn"),
+      showImportTextBtn: document.getElementById("showImportTextBtn"),
+      exportTextWrap: document.getElementById("exportTextWrap"),
+      importTextWrap: document.getElementById("importTextWrap"),
+      exportText: document.getElementById("exportText"),
+      importText: document.getElementById("importText"),
+      importBtn: document.getElementById("importBtn"),
+      cancelImportBtn: document.getElementById("cancelImportBtn"),
+      resetDataBtn: document.getElementById("resetDataBtn"),
+      chartProfit: document.getElementById("chartProfit"),
+      chartBySport: document.getElementById("chartBySport"),
+      currencySymbol: document.getElementById("currencySymbol"),
+      exportCsvBtn: document.getElementById("exportCsvBtn"),
+      showImportCsvTextBtn: document.getElementById("showImportCsvTextBtn"),
+      importCsvWrap: document.getElementById("importCsvWrap"),
+      importCsvText: document.getElementById("importCsvText"),
+      importCsvBtn: document.getElementById("importCsvBtn"),
+      cancelImportCsvBtn: document.getElementById("cancelImportCsvBtn"),
+      importCsvFile: document.getElementById("importCsvFile"),
+      csvDrop: document.getElementById("csvDrop"),
+      dateSeg: document.getElementById("dateSeg"),
+      importModeSeg: document.getElementById("importModeSeg"),
+      importReport: document.getElementById("importReport"),
+      importBanner: document.getElementById("importBanner"),
+      reportBody: document.getElementById("reportBody"),
+      copyReportBtn: document.getElementById("copyReportBtn"),
+      downloadReportBtn: document.getElementById("downloadReportBtn"),
+      clearReportBtn: document.getElementById("clearReportBtn"),
+      reportTable: document.getElementById("reportTable"),
+      tableScroller: document.getElementById("tableScroller"),
+      themeBtn: document.getElementById("themeBtn"),
+      themeDropdown: document.getElementById("themeDropdown"),
+      themeLabel: document.getElementById("themeLabel"),
+    };
+    const form = document.getElementById("betForm");
+
+    function todayISO(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+    function uid(){ return `${Date.now()}_${Math.random().toString(36).slice(2,8)}`; }
+
+    /* Theme */
+    function applyTheme(){
+      const mode = settings.theme || "auto";
+      const dark = (mode === "dark") || (mode === "auto" && sysDark);
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      els.themeLabel.textContent = mode[0].toUpperCase() + mode.slice(1);
+      els.themeDropdown.querySelectorAll("button").forEach(b=> b.classList.toggle("active", b.dataset.theme === mode));
+    }
+    function setTheme(mode){ settings.theme = mode; saveSettings(); applyTheme(); }
+    function openThemeMenu(){ els.themeDropdown.classList.add("show"); els.themeBtn.setAttribute("aria-expanded","true"); els.themeDropdown.setAttribute("aria-hidden","false"); }
+    function closeThemeMenu(){ els.themeDropdown.classList.remove("show"); els.themeBtn.setAttribute("aria-expanded","false"); els.themeDropdown.setAttribute("aria-hidden","true"); }
+    if(window.matchMedia){ const mq = window.matchMedia('(prefers-color-scheme: dark)'); mq.addEventListener?.("change", e=>{ sysDark = e.matches; if((settings.theme||"auto")==="auto") applyTheme(); }); }
+
+    /* Odds & Math */
+    function parseOddsToDecimal(format, raw){
+      const f = String(format || "").toLowerCase();
+      const v = String(raw || "").trim();
+      if(!v) throw new Error("Empty odds");
+      if(f === "decimal"){
+        const dec = Number(v);
+        if(!(dec > 1)) throw new Error("Decimal odds must be > 1.00");
+        return dec;
+      }
+      if(f === "american"){
+        let n = Number(v.replace("+",""));
+        if(!Number.isFinite(n) || n === 0) throw new Error("Bad American odds");
+        return n > 0 ? 1 + (n/100) : 1 + (100/Math.abs(n));
+      }
+      if(f === "fractional"){
+        const m = v.match(/^\s*(-?\d+)\s*\/\s*(\d+)\s*$/);
+        if(!m) throw new Error("Bad fractional A/B");
+        const A = Number(m[1]), B = Number(m[2]);
+        if(B === 0) throw new Error("Fractional denominator 0");
+        const frac = A / B;
+        if(frac <= -1) throw new Error("Invalid fractional value");
+        return 1 + frac;
+      }
+      throw new Error("Unknown odds format");
+    }
+    function calcImpliedProb(decimal){ return (decimal > 1) ? 1/decimal : null; }
+    function potentialPayout(stake, decimal){ return stake * decimal; }
+    function profitIfWon(stake, decimal){ return stake * (decimal - 1); }
+    function profitForStatus(status, stake, decimal){
+      if(status === "Won") return profitIfWon(stake, decimal);
+      if(status === "Lost") return -stake;
+      if(status === "Push/Void") return 0;
+      return 0;
+    }
+    function sanitizeNumber(val){ if(typeof val === "number") return val; const v = String(val).replace(/[^\d\.\-]/g,""); return Number(v); }
+    function formatMoney(n){
+      if(n === null || n === undefined || Number.isNaN(n)) return "—";
+      const sign = n > 0 ? "+" : n < 0 ? "−" : "";
+      const abs = Math.abs(n).toFixed(2);
+      return sign + settings.currencySymbol + abs;
+    }
+    function formatOddsForCell(format, value){
+      const tag = format === "Decimal" ? "Dec" : format === "American" ? "Amer" : "Frac";
+      return `${value} ${tag}`;
+    }
+
+    /* Odds conversion helpers */
+    function decimalToAmerican(dec){
+      if(!(dec > 1)) throw new Error("Bad decimal");
+      if(dec >= 2){
+        const n = Math.round((dec - 1) * 100);
+        return `+${n}`;
+      }else{
+        const n = Math.round(100 / (dec - 1));
+        return `-${n}`;
+      }
+    }
+    function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ const t=a%b; a=b; b=t; } return a||1; }
+    function decimalToFractional(dec){
+      if(!(dec > 1)) throw new Error("Bad decimal");
+      const x = dec - 1;
+      const maxDen = 100;
+      let bestNum = Math.round(x), bestDen = 1;
+      let bestErr = Math.abs(x - bestNum/bestDen);
+      for(let den=1; den<=maxDen; den++){
+        const num = Math.round(x * den);
+        const err = Math.abs(x - num/den);
+        if(err < bestErr - 1e-9 || (Math.abs(err-bestErr)<=1e-9 && den < bestDen)){
+          bestNum = num; bestDen = den; bestErr = err;
+        }
+      }
+      const g = gcd(bestNum, bestDen);
+      return `${bestNum/g}/${bestDen/g}`;
+    }
+    function convertOddsValue(fromFmt, value, toFmt){
+      const dec = parseOddsToDecimal(fromFmt, value);
+      if(toFmt === "Decimal") return dec.toFixed(2);
+      if(toFmt === "American") return decimalToAmerican(dec);
+      if(toFmt === "Fractional") return decimalToFractional(dec);
+      return value;
+    }
+
+    /* Dedupe */
+    function fingerprint(b){
+      const parts = [
+        String(b.date||"").trim(),
+        String(b.sport||"").trim().toLowerCase(),
+        String(b.league||"").trim().toLowerCase(),
+        String(b.betType||"").trim().toLowerCase(),
+        String(b.description||"").trim().toLowerCase(),
+        Number(sanitizeNumber(b.stake)||0).toFixed(2),
+        Number(b.decimalOdds||0).toFixed(4)
+      ];
+      return parts.join("|");
+    }
+    function buildExistingKeySet(ignoreId){
+      const s = new Set();
+      for(const b of bets){ if(ignoreId && b.id === ignoreId) continue; s.add(fingerprint(b)); }
+      return s;
+    }
+    function wouldDuplicate(b, ignoreId){ const key = fingerprint(b); const set = buildExistingKeySet(ignoreId); return set.has(key); }
+
+    /* Settings & Storage */
+    function loadSettings(){
+      try{
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if(raw){
+          const obj = JSON.parse(raw);
+          if(obj && typeof obj === "object"){
+            settings.currencySymbol = obj.currencySymbol || "$";
+            settings.theme = obj.theme || "auto";
+            settings.views = Array.isArray(obj.views) ? obj.views : [];
+          }
+        }
+      }catch{}
+      if(!["$","€","£","A$"].includes(settings.currencySymbol)) settings.currencySymbol = "$";
+      els.currencySymbol.value = settings.currencySymbol;
+      renderViewsSelect();
+      applyTheme();
+    }
+    function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+
+    function loadData(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw){ bets = []; return; }
+        const arr = JSON.parse(raw);
+        if(!Array.isArray(arr)) throw new Error("Not an array");
+        bets = arr.map(migrateItem);
+      }catch(e){
+        showImportReport({
+          severity:"error",
+          summary:"Failed to load saved data. Started fresh.",
+          rows:[{source:"app", where:"load", msg:e.message, hint:"Clear localStorage or re-import clean data."}]
+        });
+        bets = [];
+      }
+    }
+    function saveData(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(bets)); }
+
+    /* Migration */
+    function migrateItem(b){
+      const sportNorm = b.sport === "Football" ? "American Football" : (b.sport || "");
+      const fmt = b.originalOddsFormat || b.oddsFormat;
+      const val = b.originalOddsValue ?? b.odds;
+      const decimal = Number(b.decimalOdds) > 1 ? Number(b.decimalOdds) : parseOddsToDecimal(fmt, val);
+      const stake = sanitizeNumber(b.stake);
+      const res = b.resultStatus || "Pending";
+      return {
+        id: b.id || uid(),
+        date: b.date,
+        sport: sportNorm,
+        league: b.league || "",
+        bookmaker: b.bookmaker || "",
+        betType: b.betType,
+        description: b.description || "",
+        originalOddsFormat: fmt,
+        originalOddsValue: val,
+        decimalOdds: decimal,
+        stake: stake,
+        resultStatus: res,
+        profit: profitForStatus(res, stake, decimal),
+        tags: b.tags || ""
+      };
+    }
+
+    /* Filters & Views */
+    function currentFilters(){
+      return {
+        sport: els.filterSport.value || "",
+        result: els.filterResult.value || "",
+        search: (els.filterSearch.value || "").trim().toLowerCase(),
+      };
+    }
+    function renderFilters(){
+      const sports = Array.from(new Set(bets.map(b=>b.sport))).sort();
+      const cur = els.filterSport.value;
+      els.filterSport.innerHTML = `<option value="">All sports</option>` + sports.map(s=>`<option ${s===cur?'selected':''}>${s}</option>`).join("");
+      els.dateSeg.querySelectorAll("button").forEach(btn=> btn.classList.toggle("active", btn.dataset.range === datePreset));
+      els.importModeSeg.querySelectorAll("button").forEach(btn=> btn.classList.toggle("active", btn.dataset.mode === importMode));
+    }
+    function renderViewsSelect(){
+      const sel = els.savedViewsSelect;
+      const curVal = sel.value;
+      sel.innerHTML = `<option value="" disabled ${!curVal?'selected':''}>— Select a view —</option>` +
+        settings.views.map(v=>`<option value="${escapeHtml(v.name)}">${escapeHtml(v.name)}</option>`).join("");
+      if(settings.views.some(v=>v.name===curVal)) sel.value = curVal;
+    }
+    function saveCurrentView(){
+      const name = prompt("Name this view (filters + date range):");
+      if(!name || !name.trim()) return;
+      const view = { name: name.trim(), sport: els.filterSport.value, result: els.filterResult.value, search: els.filterSearch.value, datePreset };
+      const idx = settings.views.findIndex(v=>v.name===view.name);
+      if(idx>=0){
+        if(!confirm("View exists. Overwrite?")) return;
+        settings.views[idx] = view;
+      }else{
+        settings.views.push(view);
+      }
+      saveSettings(); renderViewsSelect();
+      els.savedViewsSelect.value = view.name;
+    }
+    function loadSelectedView(){
+      const name = els.savedViewsSelect.value;
+      if(!name){ alert("Select a view first."); return; }
+      const v = settings.views.find(x=>x.name===name);
+      if(!v) return;
+      els.filterSport.value = v.sport || "";
+      els.filterResult.value = v.result || "";
+      els.filterSearch.value = v.search || "";
+      datePreset = v.datePreset || "all";
+      updateAll();
+    }
+    function deleteSelectedView(){
+      const name = els.savedViewsSelect.value;
+      if(!name){ alert("Select a view to delete."); return; }
+      const idx = settings.views.findIndex(v=>v.name===name);
+      if(idx<0) return;
+      if(!confirm(`Delete view "${name}"?`)) return;
+      settings.views.splice(idx,1);
+      saveSettings(); renderViewsSelect();
+    }
+
+    function withinPreset(dateStr){
+      if(datePreset === "all") return true;
+      const days = Number(datePreset);
+      const d = new Date(dateStr+"T00:00:00");
+      if(!(d instanceof Date) || isNaN(d.getTime())) return false;
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (days-1));
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      return d >= start && d <= end;
+    }
+    function applyFilters(list){
+      const f = currentFilters();
+      return list.filter(b => {
+        if(!withinPreset(b.date)) return false;
+        if(f.sport && b.sport !== f.sport) return false;
+        if(f.result && b.resultStatus !== f.result) return false;
+        if(f.search){
+          const hay = [b.description, b.league, b.tags].join(" ").toLowerCase();
+          if(!hay.includes(f.search)) return false;
+        }
+        return true;
+      });
+    }
+    function sortBets(list){
+      const { key, dir } = sortState;
+      const mul = dir === "asc" ? 1 : -1;
+      const copy = list.slice();
+      copy.sort((a,b)=>{
+        if(key === "date"){
+          if(a.date < b.date) return -1*mul;
+          if(a.date > b.date) return 1*mul;
+          return 0;
+        }
+        if(key === "profit") return (a.profit - b.profit) * mul;
+        return 0;
+      });
+      return copy;
+    }
+
+    /* Summary & By Sport */
+    function renderStats(list){
+      const settled = list.filter(b=> b.resultStatus !== "Pending");
+      const wins = settled.filter(b=> b.resultStatus === "Won").length;
+      const totalBets = list.length;
+      const totalStaked = list.reduce((sum,b)=> sum + sanitizeNumber(b.stake), 0);
+      const totalProfit = list.reduce((sum,b)=> sum + sanitizeNumber(b.profit), 0);
+      const avgDecimal = list.length ? (list.reduce((s,b)=> s + b.decimalOdds, 0) / list.length) : 0;
+      const winRate = settled.length ? (wins / settled.length) : 0;
+      const roi = totalStaked > 0 ? (totalProfit / totalStaked) : 0;
+      const profitClass = totalProfit > 0 ? "profit-pos" : totalProfit < 0 ? "profit-neg" : "profit-zero";
+      els.stats.innerHTML = `
+        <div class="stat"><div class="k">Total Profit</div><div class="v ${profitClass}">${formatMoney(totalProfit)}</div><div class="sub">Current filters</div></div>
+        <div class="stat"><div class="k">Total Staked</div><div class="v">${formatMoney(totalStaked)}</div><div class="sub">Current filters</div></div>
+        <div class="stat"><div class="k">ROI</div><div class="v">${(roi*100).toFixed(1)}%</div><div class="sub">${totalStaked>0?"Profit / Staked":"—"}</div></div>
+        <div class="stat"><div class="k">Win Rate</div><div class="v">${(winRate*100).toFixed(1)}%</div><div class="sub">${wins}/${settled.length} settled</div></div>
+        <div class="stat"><div class="k">Total Bets</div><div class="v">${totalBets}</div><div class="sub">Current filters</div></div>
+        <div class="stat"><div class="k">Avg Odds (Dec)</div><div class="v">${avgDecimal ? avgDecimal.toFixed(2) : "—"}</div><div class="sub">Arithmetic mean</div></div>
+      `;
+      renderBySport(list);
+    }
+    function renderBySport(list){
+      const groups = {};
+      for(const b of list){
+        const g = groups[b.sport] || (groups[b.sport] = {sport:b.sport, bets:0, staked:0, profit:0, wins:0, settled:0});
+        g.bets += 1;
+        g.staked += sanitizeNumber(b.stake)||0;
+        g.profit += sanitizeNumber(b.profit)||0;
+        if(b.resultStatus !== "Pending"){ g.settled += 1; if(b.resultStatus==="Won") g.wins += 1; }
+      }
+      const items = Object.values(groups).sort((a,b)=> b.bets - a.bets);
+      if(items.length===0){ els.bySport.innerHTML = `<div class="muted">No data.</div>`; return; }
+      const rows = items.map(i=>{
+        const wr = i.settled ? (i.wins/i.settled)*100 : 0;
+        const roi = i.staked>0 ? (i.profit/i.staked)*100 : 0;
+        const pcls = i.profit>0?"profit-pos":i.profit<0?"profit-neg":"muted";
+        return `<tr>
+          <td>${escapeHtml(i.sport||"—")}</td>
+          <td class="right">${i.bets}</td>
+          <td class="right">${formatMoney(i.staked)}</td>
+          <td class="right ${pcls}">${formatMoney(i.profit)}</td>
+          <td class="right">${wr.toFixed(1)}%</td>
+          <td class="right">${roi.toFixed(1)}%</td>
+        </tr>`;
+      }).join("");
+      els.bySport.innerHTML = `
+        <div class="overflow" style="max-height:220px">
+          <table class="mini-table">
+            <thead><tr><th>Sport</th><th class="right">Bets</th><th class="right">Staked</th><th class="right">Profit</th><th class="right">Win%</th><th class="right">ROI%</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    /* Table */
+    function renderTable(list){
+      const rows = sortBets(list).map(b=>{
+        const statusClass = b.resultStatus==="Won"?"won":b.resultStatus==="Lost"?"lost":b.resultStatus==="Push/Void"?"push":"pending";
+        const oddsCell = formatOddsForCell(b.originalOddsFormat, b.originalOddsValue);
+        const tip = `Decimal ${b.decimalOdds.toFixed(2)} • Implied ${(calcImpliedProb(b.decimalOdds)*100).toFixed(1)}%`;
+        const profitClass = b.profit > 0 ? "profit-pos" : b.profit < 0 ? "profit-neg" : "muted";
+        const selClass = (b.id === selectedId) ? "selected" : "";
+        return `
+          <tr class="${statusClass} ${selClass}" data-id="${b.id}">
+            <td class="nowrap">${b.date}</td>
+            <td>${b.sport}</td>
+            <td>${b.league || ""}</td>
+            <td>${b.betType}</td>
+            <td>${b.description || ""}<div class="muted" style="font-size:11px">${b.bookmaker?b.bookmaker+" • ":""}${b.tags?b.tags:""}</div></td>
+            <td title="${tip}">${oddsCell}</td>
+            <td class="right">${formatMoney(b.stake)}</td>
+            <td>${b.resultStatus}</td>
+            <td class="right ${profitClass}">${formatMoney(b.profit)}</td>
+            <td class="actions">
+              <button type="button" data-action="edit" title="Edit">✏️</button>
+              <button type="button" data-action="delete" title="Delete">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+      els.tbody.innerHTML = rows || `<tr><td colspan="10" class="muted">No bets yet.</td></tr>`;
+    }
+
+    /* Charts (same as before) */
+    function drawNoData(canvas, text){
+      const {ctx,w,h} = prepCanvas(canvas);
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || "#6b7280";
+      ctx.textAlign = "center";
+      ctx.fillText(text, w/2, h/2);
+    }
+    function prepCanvas(canvas){
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      const cs = getComputedStyle(document.documentElement);
+      const text = cs.getPropertyValue('--text').trim() || "#111827";
+      const grid = cs.getPropertyValue('--border').trim() || "#e5e7eb";
+      ctx.clearRect(0,0,rect.width,rect.height);
+      ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif";
+      ctx.fillStyle = text;
+      ctx.strokeStyle = grid;
+      return { ctx, w: rect.width, h: rect.height, text, grid };
+    }
+    function drawProfitOverTime(list){
+      const canvas = els.chartProfit;
+      const settled = list.filter(b=> b.resultStatus !== "Pending");
+      if(settled.length === 0){ drawNoData(canvas, "No settled bets"); return; }
+      const byDate = {};
+      for(const b of settled){ byDate[b.date] = (byDate[b.date] || 0) + (sanitizeNumber(b.profit) || 0); }
+      const dates = Object.keys(byDate).sort();
+      let cum = 0;
+      const points = dates.map(d=>{ cum += byDate[d]; return { d, y: cum }; });
+
+      const {ctx,w,h} = prepCanvas(canvas);
+      const pad = { l: 52, r: 12, t: 12, b: 28 };
+      const innerW = w - pad.l - pad.r;
+      const innerH = h - pad.t - pad.b;
+
+      const ys = points.map(p=>p.y);
+      const yMin = Math.min(0, Math.min(...ys));
+      const yMax = Math.max(0, Math.max(...ys));
+      const ySpan = (yMax - yMin) || 1;
+
+      const xCount = points.length;
+      function xFor(i){ return pad.l + (innerW * (i/(xCount-1||1))); }
+      function yFor(val){ return pad.t + innerH - ((val - yMin) / ySpan) * innerH; }
+
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
+      ctx.lineWidth = 1;
+      for(let g=0; g<=5; g++){
+        const gy = pad.t + (innerH * (g/5));
+        ctx.beginPath(); ctx.moveTo(pad.l, gy); ctx.lineTo(w - pad.r, gy); ctx.stroke();
+      }
+      const muted = getComputedStyle(document.documentElement).getPropertyValue('--gray').trim();
+      if(yMin < 0 && yMax > 0){
+        ctx.strokeStyle = muted;
+        ctx.beginPath(); ctx.moveTo(pad.l, yFor(0)); ctx.lineTo(w - pad.r, yFor(0)); ctx.stroke();
+      }
+
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
+      ctx.textAlign = "right";
+      const yVals = [yMax, (yMax+yMin)/2, yMin];
+      for(const v of yVals){ ctx.fillText(formatMoney(v), pad.l - 6, yFor(v) - 2); }
+
+      ctx.textAlign = "center";
+      const step = Math.max(1, Math.floor((xCount-1) / 4));
+      for(let i=0; i<xCount; i+=step){
+        const d = points[i].d; const label = d.slice(5);
+        ctx.fillText(label, xFor(i), h - 6);
+      }
+
+      const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+      ctx.strokeStyle = primary; ctx.lineWidth = 2;
+      ctx.beginPath();
+      points.forEach((p,i)=>{ const x=xFor(i), y=yFor(p.y); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+      ctx.stroke();
+
+      ctx.fillStyle = primary;
+      points.forEach((p,i)=>{ const x=xFor(i), y=yFor(p.y); ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill(); });
+    }
+    function drawBetsBySport(list){
+      const canvas = els.chartBySport;
+      if(list.length === 0){ drawNoData(canvas, "No bets"); return; }
+      const counts = {};
+      for(const b of list){ counts[b.sport] = (counts[b.sport] || 0) + 1; }
+      const items = Object.entries(counts).sort((a,b)=> b[1]-a[1]);
+
+      const {ctx,w,h} = prepCanvas(canvas);
+      const pad = { l: 44, r: 12, t: 12, b: 40 };
+      const innerW = w - pad.l - pad.r;
+      const innerH = h - pad.t - pad.b;
+      const n = items.length;
+      const maxVal = Math.max(...items.map(i=>i[1]), 1);
+      const barW = Math.max(16, innerW / Math.max(n,1) * 0.6);
+      const gap = (innerW - barW*n) / Math.max(n-1,1);
+
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
+      ctx.lineWidth = 1;
+      for(let g=0; g<=5; g++){
+        const gy = pad.t + (innerH * (g/5));
+        ctx.beginPath(); ctx.moveTo(pad.l, gy); ctx.lineTo(w - pad.r, gy); ctx.stroke();
+        const val = Math.round(maxVal * (1 - g/5));
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
+        ctx.textAlign = "right";
+        ctx.fillText(String(val), pad.l - 6, gy - 2);
+      }
+
+      let x = pad.l;
+      const barColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+      items.forEach(([label, val])=>{
+        const hPx = (val / maxVal) * innerH;
+        const y = pad.t + innerH - hPx;
+        ctx.fillStyle = barColor;
+        ctx.fillRect(x, y, barW, hPx);
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+        ctx.textAlign = "center";
+        ctx.fillText(String(val), x + barW/2, y - 4);
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
+        const short = label.length>12 ? label.slice(0,11)+"…" : label;
+        ctx.fillText(short, x + barW/2, h - 6);
+        x += barW + gap;
+      });
+    }
+
+    /* Import UX helpers */
+    function hintFor(msg){
+      msg = String(msg||"");
+      if(/Unknown odds format/i.test(msg)) return "Use one of: American, Decimal, Fractional.";
+      if(/Decimal odds must be > 1\.00/i.test(msg)) return "Enter decimal greater than 1.00 (e.g., 1.90).";
+      if(/Bad American odds/i.test(msg)) return "Use +150 or -120 (not 0).";
+      if(/Bad fractional A\/B/i.test(msg)) return "Use A/B like 5/2; only numbers and a slash.";
+      if(/Fractional denominator 0/i.test(msg)) return "B (denominator) must be > 0.";
+      if(/Invalid fractional value/i.test(msg)) return "Negative fractional not supported.";
+      if(/Not an array/i.test(msg) || /JSON must be an array/i.test(msg)) return "Wrap items in [ ... ] or use { schemaVersion, items }.";
+      if(/Missing headers/i.test(msg)) return "Add all required CSV headers exactly as shown.";
+      if(/Bad row/i.test(msg)) return "Fill required fields: date, sport, betType, originalOddsFormat, originalOddsValue.";
+      if(/Empty odds/i.test(msg)) return "Provide odds value for each row.";
+      if(/Duplicate/i.test(msg)) return "Change one of: date, league, bet type, description, stake, or odds.";
+      return "Check the value formatting and required fields.";
+    }
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+    function showImportReport({severity, summary, rows}){
+      lastReport = { severity, summary, rows: rows||[] };
+      const b = els.importBanner;
+      b.className = "banner " + (severity||"success");
+      const counts = rows?.length ? ` • ${rows.length} issue${rows.length>1?"s":""}` : "";
+      b.textContent = summary + counts;
+      els.reportBody.innerHTML = (rows||[]).map(r=>{
+        const where = r.where || (r.index!=null ? String(r.index) : "");
+        const hint = r.hint || hintFor(r.msg);
+        return `<tr>
+          <td>${r.source||"import"}</td>
+          <td>${where}</td>
+          <td><span class="kbd">${escapeHtml(r.msg)}</span></td>
+          <td class="hint">${escapeHtml(hint)}</td>
+        </tr>`;
+      }).join("");
+      els.importReport.style.display = "block";
+    }
+
+    function csvEscape(val){ const s = String(val ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; }
+    function toCSV(rows, headers){ return [headers.join(","), ...rows.map(r=> headers.map(h=> csvEscape(r[h])).join(","))].join("\n"); }
+    function parseCSV(text){
+      const rows = [];
+      let i=0, field="", inQuotes=false, row=[];
+      const pushField=()=>{ row.push(field); field=""; };
+      const pushRow=()=>{ rows.push(row); row=[]; };
+      while(i<text.length){
+        const c = text[i];
+        if(inQuotes){
+          if(c === '"'){ if(text[i+1] === '"'){ field+='"'; i+=2; } else { inQuotes=false; i++; } }
+          else { field+=c; i++; }
+        }else{
+          if(c === '"'){ inQuotes = true; i++; }
+          else if(c === ','){ pushField(); i++; }
+          else if(c === '\r'){ i++; }
+          else if(c === '\n'){ pushField(); pushRow(); i++; }
+          else { field+=c; i++; }
+        }
+      }
+      if(field.length>0 || row.length>0){ pushField(); pushRow(); }
+      return rows;
+    }
+
+    /* Export (schema v2) */
+    function exportPayload(){
+      return {
+        schemaVersion: APP_SCHEMA_VERSION,
+        exportedAt: new Date().toISOString(),
+        currencySymbol: settings.currencySymbol,
+        items: bets
+      };
+    }
+
+    /* Import engine */
+    function runImport({type, text, mode}){
+      const errors = [];
+      const imported = [];
+      function pushErr(where, msg){ errors.push({source:type, where, msg, hint:hintFor(msg)}); }
+
+      const existingKeys = new Set(bets.map(fingerprint));
+      const fileKeys = new Map();
+
+      if(type === "json"){
+        let raw;
+        try{ raw = JSON.parse(text); }
+        catch(e){ pushErr("parse", "Invalid JSON"); return { okCount:0, skipCount:0, errors, data:[] }; }
+
+        let arr = null, ver = null;
+        if(Array.isArray(raw)){ arr = raw; ver = 1; }
+        else if(raw && typeof raw === "object" && Array.isArray(raw.items)){ arr = raw.items; ver = Number(raw.schemaVersion)||1; }
+        else { pushErr("root", "JSON must be an array or { schemaVersion, items }"); return { okCount:0, skipCount:0, errors, data:[] }; }
+
+        if(ver && ver !== APP_SCHEMA_VERSION){
+          errors.push({source:"json", where:"schema", msg:`Notice: detected schema v${ver}, migrated to v${APP_SCHEMA_VERSION}`, hint:"No action needed."});
+        }
+
+        arr.forEach((b, i)=>{
+          try{
+            if(!b.date || !b.sport || !b.betType || (!b.originalOddsFormat && !b.oddsFormat) || (b.originalOddsValue===undefined && b.odds===undefined)){
+              throw new Error("Missing required fields");
+            }
+            const row = migrateItem(b);
+            const key = fingerprint(row);
+
+            if(existingKeys.has(key)){
+              throw new Error("Duplicate of existing data");
+            }
+            if(fileKeys.has(key)){
+              const first = fileKeys.get(key);
+              throw new Error(`Duplicate within file (matches item #${first+1})`);
+            }
+            fileKeys.set(key, i);
+            imported.push(row);
+          }catch(e){ pushErr(`#${i+1}`, e.message||String(e)); }
+        });
+      }
+
+      if(type === "csv"){
+        const rows = parseCSV(text);
+        if(rows.length < 2){ pushErr("header", "No data rows found"); return { okCount:0, skipCount:0, errors, data:[] }; }
+        const header = rows[0].map(h=>h.trim());
+        const missing = CSV_HEADERS.filter(h=> !header.includes(h));
+        if(missing.length){ pushErr("header", "Missing headers: "+missing.join(", ")); return { okCount:0, skipCount:0, errors, data:[] }; }
+        const idx = Object.fromEntries(header.map((h,ii)=>[h,ii]));
+        rows.slice(1).forEach((r, ri)=>{
+          if(!(r.length>1 && r.some(x=>String(x).trim()!==""))) return;
+          try{
+            const get = (h)=> r[idx[h]] ?? "";
+            const fmt = get("originalOddsFormat") || get("oddsFormat");
+            const val = get("originalOddsValue") || get("odds");
+            const decCandidate = Number(get("decimalOdds"));
+            const dec = (decCandidate>1) ? decCandidate : parseOddsToDecimal(fmt, val);
+            const stake = sanitizeNumber(get("stake"));
+            const res = get("resultStatus") || "Pending";
+            const sportNorm = (get("sport")==="Football") ? "American Football" : get("sport");
+            const row = {
+              id: get("id") || uid(),
+              date: get("date"),
+              sport: sportNorm,
+              league: get("league"),
+              bookmaker: get("bookmaker"),
+              betType: get("betType"),
+              description: get("description"),
+              originalOddsFormat: fmt,
+              originalOddsValue: val,
+              decimalOdds: dec,
+              stake: stake,
+              resultStatus: res,
+              profit: profitForStatus(res, stake, dec),
+              tags: get("tags")
+            };
+            if(!row.date || !row.sport || !row.betType || !row.originalOddsFormat || row.originalOddsValue===""){ throw new Error("Bad row"); }
+            const key = fingerprint(row);
+            if(existingKeys.has(key)) throw new Error("Duplicate of existing data");
+            if(fileKeys.has(key)){ const first = fileKeys.get(key); throw new Error(`Duplicate within file (matches row ${first+2})`); }
+            fileKeys.set(key, ri);
+            imported.push(row);
+          }catch(e){ pushErr(`row ${ri+2}`, e.message||String(e)); }
+        });
+      }
+
+      if(mode==="strict" && errors.some(x=>!/^Notice:/.test(x.msg))){ return { okCount:0, skipCount:0, errors, data:[] }; }
+      const notices = errors.filter(x=>/^Notice:/.test(x.msg));
+      const errs = errors.filter(x=>!/^Notice:/.test(x.msg));
+      if(mode==="lenient"){ return { okCount: imported.length, skipCount: errs.length, errors: [...notices, ...errs], data: imported }; }
+      return { okCount: imported.length, skipCount: 0, errors: notices, data: imported };
+    }
+
+    /* UI helpers */
+    function setFormDefaults(){ if(!els.date.value) els.date.value = todayISO(); els.resultStatus.value = "Pending"; }
+    function clearForm(){
+      betForm.reset();
+      setFormDefaults();
+      editingId = null;
+      els.submitBtn.textContent = "Add Bet";
+      els.cancelEditBtn.style.display = "none";
+      lastOddsFormat = els.oddsFormat.value;
+      updateCalcPreview();
+    }
+    function startEdit(id){
+      const b = bets.find(x=>x.id===id);
+      if(!b) return;
+      editingId = id;
+      const opts = ["American Football","Basketball","Tennis","Soccer","Baseball","Hockey","Other"];
+      els.date.value = b.date;
+      els.sport.value = opts.includes(b.sport) ? b.sport : "Other";
+      els.league.value = b.league || "";
+      els.bookmaker.value = b.bookmaker || "";
+      els.betType.value = b.betType;
+      els.description.value = b.description || "";
+      els.oddsFormat.value = b.originalOddsFormat;
+      els.oddsValue.value = b.originalOddsValue;
+      els.stake.value = b.stake;
+      els.resultStatus.value = b.resultStatus;
+      els.tags.value = b.tags || "";
+      els.submitBtn.textContent = "Save Changes";
+      els.cancelEditBtn.style.display = "inline-flex";
+      lastOddsFormat = els.oddsFormat.value;
+      document.getElementById("formCard").scrollIntoView({behavior:"smooth",block:"start"});
+      updateCalcPreview();
+    }
+    function removeBet(id){
+      if(!confirm("Delete this bet?")) return;
+      bets = bets.filter(b=>b.id!==id);
+      if(selectedId===id) selectedId = null;
+      updateAll();
+    }
+    function updateCalcPreview(){
+      try{
+        const dec = parseOddsToDecimal(els.oddsFormat.value, els.oddsValue.value.trim());
+        const stake = sanitizeNumber(els.stake.value);
+        const prob = calcImpliedProb(dec);
+        els.calcProb.textContent = prob? (prob*100).toFixed(1)+"%" : "—";
+        els.calcPayout.textContent = stake>0? formatMoney(potentialPayout(stake, dec)) : "—";
+        els.calcProfit.textContent = stake>0? formatMoney(profitIfWon(stake, dec)) : "—";
+      }catch{
+        els.calcProb.textContent = "—";
+        els.calcPayout.textContent = "—";
+        els.calcProfit.textContent = "—";
+      }
+    }
+    function toggleSort(key){
+      if(sortState.key === key){ sortState.dir = sortState.dir === "asc" ? "desc" : "asc"; }
+      else { sortState.key = key; sortState.dir = key === "date" ? "desc" : "desc"; }
+      updateAll();
+    }
+
+    function updateAll(){
+      renderFilters();
+      const filtered = applyFilters(bets);
+      if(selectedId && !filtered.some(b=>b.id===selectedId)){ selectedId = null; }
+      renderStats(filtered);
+      renderTable(filtered);
+      renderCharts(filtered);
+      saveData();
+    }
+    function renderCharts(filtered){ drawProfitOverTime(filtered); drawBetsBySport(filtered); }
+
+    /* Selection & Shortcuts */
+    function visibleSorted(){ return sortBets(applyFilters(bets)); }
+    function selectRow(id){
+      selectedId = id;
+      renderTable(applyFilters(bets));
+      if(!id) return;
+      const tr = els.tbody.querySelector(`tr[data-id="${id}"]`);
+      if(tr){ tr.scrollIntoView({block:"nearest"}); }
+    }
+    function selectNext(delta){
+      const list = visibleSorted();
+      if(list.length===0){ selectedId=null; renderTable(list); return; }
+      let idx = selectedId ? list.findIndex(b=>b.id===selectedId) : -1;
+      if(idx<0) idx = (delta>0? -1 : 0);
+      idx = Math.max(0, Math.min(list.length-1, idx + delta));
+      selectRow(list[idx].id);
+    }
+    function isTypingInField(e){
+      const tag = (e.target && e.target.tagName || "").toLowerCase();
+      const editable = e.target && (e.target.isContentEditable || e.target.getAttribute?.("contenteditable")==="true");
+      return editable || tag==="input" || tag==="textarea" || tag==="select";
+    }
+
+    /* Events */
+    // Theme dropdown
+    els.themeBtn.addEventListener("click", (e)=>{ e.stopPropagation(); const open = els.themeDropdown.classList.contains("show"); if(open) closeThemeMenu(); else openThemeMenu(); });
+    els.themeDropdown.addEventListener("click", (e)=>{
+      const btn = e.target.closest("button[data-theme]");
+      if(!btn) return;
+      setTheme(btn.dataset.theme);
+      closeThemeMenu();
+      els.themeBtn.focus();
+    });
+    document.addEventListener("click", (e)=>{ if(!els.themeDropdown.contains(e.target) && !els.themeBtn.contains(e.target)) closeThemeMenu(); });
+    document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeThemeMenu(); });
+
+    // Odds format switching
+    let lastOddsFormat = document.getElementById("oddsFormat").value;
+    els.oddsFormat.addEventListener("focus", ()=>{ lastOddsFormat = els.oddsFormat.value; });
+    els.oddsFormat.addEventListener("mousedown", ()=>{ lastOddsFormat = els.oddsFormat.value; });
+    els.oddsFormat.addEventListener("change", ()=>{
+      const from = lastOddsFormat;
+      const to = els.oddsFormat.value;
+      const val = els.oddsValue.value.trim();
+      try{
+        if(val){
+          const newVal = convertOddsValue(from, val, to);
+          els.oddsValue.value = newVal;
+        }
+      }catch{}
+      lastOddsFormat = to;
+      updateCalcPreview();
+    });
+
+    // Form submit
+    const betForm = document.getElementById("betForm");
+    betForm.addEventListener("submit", (e)=>{
+      e.preventDefault();
+      try{
+        const sportSel = els.sport.value==="Other" ? (prompt("Enter sport name:")||"Other").trim() : els.sport.value;
+        const data = {
+          date: els.date.value,
+          sport: sportSel,
+          league: els.league.value.trim(),
+          bookmaker: els.bookmaker.value.trim(),
+          betType: els.betType.value,
+          description: els.description.value.trim(),
+          originalOddsFormat: els.oddsFormat.value,
+          originalOddsValue: els.oddsValue.value.trim(),
+          stake: sanitizeNumber(els.stake.value),
+          resultStatus: els.resultStatus.value,
+          tags: els.tags.value.trim()
+        };
+        if(!data.date) throw new Error("Date is required");
+        if(!data.sport) throw new Error("Sport is required");
+        if(!data.league) throw new Error("League is required");
+        if(!data.betType) throw new Error("Bet Type is required");
+        if(!data.originalOddsValue) throw new Error("Odds value is required");
+        if(!(data.stake > 0)) throw new Error("Stake must be > 0");
+
+        const dec = parseOddsToDecimal(data.originalOddsFormat, data.originalOddsValue);
+        const row = {
+          id: editingId || uid(),
+          date: data.date,
+          sport: data.sport,
+          league: data.league,
+          bookmaker: data.bookmaker,
+          betType: data.betType,
+          description: data.description,
+          originalOddsFormat: data.originalOddsFormat,
+          originalOddsValue: data.originalOddsValue,
+          decimalOdds: dec,
+          stake: data.stake,
+          resultStatus: data.resultStatus,
+          profit: profitForStatus(data.resultStatus, data.stake, dec),
+          tags: data.tags
+        };
+
+        const dup = wouldDuplicate(row, editingId || null);
+        if(dup){
+          const ok = confirm("This looks like a duplicate of an existing bet. Add anyway?");
+          if(!ok) return;
+        }
+
+        if(editingId){
+          const idx = bets.findIndex(b=>b.id===editingId);
+          if(idx>=0){ bets[idx] = row; selectedId = row.id; }
+        }else{
+          bets.unshift(row); selectedId = row.id;
+        }
+        clearForm();
+        updateAll();
+      }catch(err){
+        showImportReport({
+          severity:"error",
+          summary:"Form error",
+          rows:[{source:"form", where:"new bet", msg:err.message, hint: hintFor(err.message)}]
+        });
+      }
+    });
+    els.clearFormBtn.addEventListener("click", clearForm);
+    els.cancelEditBtn.addEventListener("click", clearForm);
+    ["oddsFormat","oddsValue","stake"].forEach(id=>{
+      const el = document.getElementById(id);
+      el.addEventListener("input", updateCalcPreview);
+      el.addEventListener("change", updateCalcPreview);
+    });
+    ["filterSport","filterResult","filterSearch"].forEach(id=>{
+      const el = document.getElementById(id);
+      el.addEventListener("input", updateAll);
+      el.addEventListener("change", updateAll);
+    });
+    els.clearFiltersBtn.addEventListener("click", ()=>{ els.filterSport.value=""; els.filterResult.value=""; els.filterSearch.value=""; updateAll(); });
+
+    els.saveViewBtn.addEventListener("click", saveCurrentView);
+    els.loadViewBtn.addEventListener("click", loadSelectedView);
+    els.deleteViewBtn.addEventListener("click", deleteSelectedView);
+
+    document.querySelector("thead").addEventListener("click", (e)=>{
+      const th = e.target.closest(".sortable"); if(!th) return; toggleSort(th.getAttribute("data-sort"));
+    });
+    els.tbody.addEventListener("click", (e)=>{
+      const tr = e.target.closest("tr");
+      if(tr && tr.dataset.id){ selectRow(tr.dataset.id); }
+      const btn = e.target.closest("button"); if(!btn) return;
+      const id = tr ? tr.getAttribute("data-id") : null; if(!id) return;
+      const action = btn.getAttribute("data-action");
+      if(action==="edit") startEdit(id);
+      if(action==="delete") removeBet(id);
+    });
+
+    // JSON export/import
+    els.exportBtn.addEventListener("click", ()=>{
+      const blob = new Blob([JSON.stringify(exportPayload(), null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "sports-bet-tracker.json";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    });
+    els.showExportTextBtn.addEventListener("click", ()=>{
+      els.exportText.value = JSON.stringify(exportPayload(), null, 2);
+      els.exportTextWrap.style.display = "block";
+      els.importTextWrap.style.display = "none";
+      els.importCsvWrap.style.display = "none";
+      els.exportText.select();
+    });
+    els.showImportTextBtn.addEventListener("click", ()=>{
+      els.importTextWrap.style.display = "block";
+      els.exportTextWrap.style.display = "none";
+      els.importCsvWrap.style.display = "none";
+      els.importText.focus();
+    });
+    els.importBtn.addEventListener("click", ()=>{
+      const res = runImport({ type:"json", text: (els.importText.value||"").trim(), mode: importMode });
+      const hasRealErrors = res.errors.some(x=>!/^Notice:/.test(x.msg));
+      if(importMode==="strict" && hasRealErrors){
+        showImportReport({ severity:"error", summary:"JSON import failed (strict). Fix errors and retry.", rows: res.errors });
+        return;
+      }
+      bets = res.data; selectedId = null; updateAll();
+      const sev = hasRealErrors ? "warn" : "success";
+      const summary = hasRealErrors ? `JSON import partial: ${res.okCount} imported, ${res.skipCount} skipped.` : `JSON import successful: ${res.okCount} rows.`;
+      showImportReport({ severity:sev, summary, rows: res.errors });
+      els.importTextWrap.style.display = "none"; els.importText.value = "";
+    });
+    els.cancelImportBtn.addEventListener("click", ()=>{ els.importTextWrap.style.display = "none"; });
+
+    // CSV export/import
+    els.exportCsvBtn.addEventListener("click", ()=>{
+      const rows = bets.map(b=>({
+        id:b.id, date:b.date, sport:b.sport, league:b.league, bookmaker:b.bookmaker, betType:b.betType,
+        description:b.description, originalOddsFormat:b.originalOddsFormat, originalOddsValue:b.originalOddsValue,
+        decimalOdds: b.decimalOdds, stake: b.stake, resultStatus: b.resultStatus, profit: b.profit, tags: b.tags
+      }));
+      const csv = toCSV(rows, CSV_HEADERS);
+      const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "sports-bet-tracker.csv";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    });
+    els.showImportCsvTextBtn.addEventListener("click", ()=>{
+      els.importCsvWrap.style.display = "block";
+      els.importTextWrap.style.display = "none";
+      els.exportTextWrap.style.display = "none";
+      els.importCsvText.focus();
+    });
+    els.importCsvBtn.addEventListener("click", ()=>{
+      const res = runImport({ type:"csv", text: (els.importCsvText.value||"").trim(), mode: importMode });
+      const hasRealErrors = res.errors.some(x=>!/^Notice:/.test(x.msg));
+      if(importMode==="strict" && hasRealErrors){
+        showImportReport({ severity:"error", summary:"CSV import failed (strict). Fix errors and retry.", rows: res.errors });
+        return;
+      }
+      bets = res.data; selectedId = null; updateAll();
+      const sev = hasRealErrors ? "warn" : "success";
+      const summary = hasRealErrors ? `CSV import partial: ${res.okCount} imported, ${res.skipCount} skipped.` : `CSV import successful: ${res.okCount} rows.`;
+      showImportReport({ severity:sev, summary, rows: res.errors });
+      els.importCsvWrap.style.display = "none"; els.importCsvText.value = "";
+    });
+    els.cancelImportCsvBtn.addEventListener("click", ()=>{ els.importCsvWrap.style.display = "none"; });
+
+    els.importCsvFile.addEventListener("change", (e)=>{
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        const res = runImport({ type:"csv", text: String(reader.result||""), mode: importMode });
+        const hasRealErrors = res.errors.some(x=>!/^Notice:/.test(x.msg));
+        if(importMode==="strict" && hasRealErrors){
+          showImportReport({ severity:"error", summary:"CSV import failed (strict). Fix errors and retry.", rows: res.errors });
+        }else{
+          bets = res.data; selectedId = null; updateAll();
+          const sev = hasRealErrors ? "warn" : "success";
+          const summary = hasRealErrors ? `CSV import partial: ${res.okCount} imported, ${res.skipCount} skipped.` : `CSV import successful: ${res.okCount} rows.`;
+          showImportReport({ severity:sev, summary, rows: res.errors });
+        }
+        els.importCsvFile.value = "";
+      };
+      reader.readAsText(file);
+    });
+
+    ["dragenter","dragover"].forEach(ev=>{
+      els.csvDrop.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); els.csvDrop.classList.add("dragover"); });
+    });
+    ["dragleave","dragend","drop"].forEach(ev=>{
+      els.csvDrop.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); if(ev!=="drop") els.csvDrop.classList.remove("dragover"); });
+    });
+    els.csvDrop.addEventListener("drop", (e)=>{
+      els.csvDrop.classList.remove("dragover");
+      const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        const res = runImport({ type:"csv", text: String(reader.result||""), mode: importMode });
+        const hasRealErrors = res.errors.some(x=>!/^Notice:/.test(x.msg));
+        if(importMode==="strict" && hasRealErrors){
+          showImportReport({ severity:"error", summary:"CSV import failed (strict). Fix errors and retry.", rows: res.errors });
+        }else{
+          bets = res.data; selectedId = null; updateAll();
+          const sev = hasRealErrors ? "warn" : "success";
+          const summary = hasRealErrors ? `CSV import partial: ${res.okCount} imported, ${res.skipCount} skipped.` : `CSV import successful: ${res.okCount} rows.`;
+          showImportReport({ severity:sev, summary, rows: res.errors });
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // Settings
+    els.currencySymbol.addEventListener("change", ()=>{
+      settings.currencySymbol = els.currencySymbol.value;
+      saveSettings();
+      updateCalcPreview();
+      updateAll();
+    });
+    els.importModeSeg.addEventListener("click", (e)=>{
+      const btn = e.target.closest("button[data-mode]");
+      if(!btn) return;
+      importMode = btn.dataset.mode;
+      renderFilters();
+    });
+
+    // Report actions
+    els.copyReportBtn.addEventListener("click", ()=>{
+      const lines = [
+        `Summary: ${lastReport.summary}`,
+        `Severity: ${lastReport.severity}`,
+        `Issues: ${lastReport.rows.length}`
+      ];
+      lastReport.rows.forEach(r=> lines.push(`- [${r.source}] at ${r.where}: ${r.msg} | Fix: ${r.hint || hintFor(r.msg)}`));
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(lines.join("\n")); }
+    });
+    els.downloadReportBtn.addEventListener("click", ()=>{
+      const headers = ["severity","summary","source","where","message","hint"];
+      const rows = lastReport.rows.length ? lastReport.rows : [{source:"-",where:"-",msg:"No issues",hint:"-"}];
+      const data = rows.map(r=>({
+        severity:lastReport.severity,
+        summary:lastReport.summary,
+        source:r.source||"import",
+        where:r.where||"",
+        message:r.msg||"",
+        hint:r.hint||hintFor(r.msg||"")
+      }));
+      const csv = toCSV(data, headers);
+      const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "import-report.csv";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    });
+    els.clearReportBtn.addEventListener("click", ()=>{
+      els.importReport.style.display = "none";
+      lastReport = {summary:"",severity:"success",rows:[]};
+    });
+
+    // Reset
+    els.resetDataBtn.addEventListener("click", ()=>{
+      if(!confirm("This deletes ALL saved bets. Continue?")) return;
+      bets = [];
+      localStorage.removeItem(STORAGE_KEY);
+      clearForm();
+      selectedId = null;
+      updateAll();
+      lastReport = {summary:"",severity:"success",rows:[]};
+      els.importReport.style.display = "none";
+    });
+
+    // Date presets
+    els.dateSeg.addEventListener("click", (e)=>{
+      const btn = e.target.closest("button[data-range]");
+      if(!btn) return;
+      datePreset = btn.dataset.range;
+      updateAll();
+    });
+
+    // Global shortcuts
+    document.addEventListener("keydown", (e)=>{
+      if(isTypingInField(e)){ return; }
+      if(e.key === "/"){ e.preventDefault(); els.filterSearch.focus(); return; }
+      if(e.key.toLowerCase() === "n"){ e.preventDefault(); document.getElementById("formCard").scrollIntoView({behavior:"smooth"}); els.date.focus(); return; }
+      if(e.key.toLowerCase() === "f"){ e.preventDefault(); els.filterSport.focus(); return; }
+      if(e.key === "ArrowDown"){ e.preventDefault(); selectNext(1); return; }
+      if(e.key === "ArrowUp"){ e.preventDefault(); selectNext(-1); return; }
+      if(e.key.toLowerCase() === "e"){ e.preventDefault(); if(selectedId) startEdit(selectedId); return; }
+      if(e.key === "Delete" || e.key === "Backspace"){ if(selectedId){ e.preventDefault(); removeBet(selectedId); } return; }
+    });
+
+    // Init
+    (function init(){
+      loadSettings();
+      loadData();
+      setFormDefaults();
+      renderFilters();
+      lastOddsFormat = els.oddsFormat.value;
+      updateCalcPreview();
+      updateAll();
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
