@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <title>Track and Chart Bets & ROI - Unaffiliated Sports</title>
+  <title>NBB - Unaffiliated Sports</title>
   <meta name="robots" content="noindex, nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
@@ -139,23 +139,22 @@
         <h1>Unaffiliated Sports</h1>
         <div class="sub"></div>
       </div>
-    <center>        
+    <center>     
     <div class="topnav">
-     <a class="active" href="https://unaffiliatedsports.com">TRACKER</a>
+     <a href="https://unaffiliatedsports.com">TRACKER</a>
      <a href="betmap.html">BET MAP</a>
      <a href="b1.html">B1</a>
      <a href="cba.html">CBA</a>
      <a href="lmp.html">LMP</a>
      <a href="mlb.html">MLB</a>
      <a href="nba.html">NBA</a>
-     <a href="nbb.html">NBB</a>
+     <a class="active" href="nbb.html">NBB</a>
      <a href="ncaab.html">NCAAB (D-1)</a>
      <a href="ncaaf.html">NCAAF (FBS)</a>
      <a href="nfl.html">NFL</a>
      <a href="npb.html">NPB</a>
     </div> 
     </center>
-  
       <div class="header-actions">
         <button type="button" id="themeBtn" class="btn" aria-haspopup="true" aria-expanded="false" aria-controls="themeDropdown">
           Theme: <span id="themeLabel" style="margin-left:6px">Auto</span>
@@ -169,286 +168,9 @@
     </div>
   </header>
 
-  <div class="container">
-    <div class="grid">
-      <!-- form -->
-      <section class="card" id="formCard">
-        <h2></h2>
-        <form id="betForm" autocomplete="off">
-          <div class="two">
-            <div>
-              <label for="date">Date</label>
-              <input id="date" type="date" required />
-            </div>
-            <div>
-              <label for="sport">Sport</label>
-              <select id="sport" required>
-                <option value="">Select sport…</option>
-                <option>American Football</option>
-                <option>Basketball</option>
-                <option>Tennis</option>
-                <option>Soccer</option>
-                <option>Baseball</option>
-                <option>Hockey</option>
-                <option>Other</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="two">
-            <div>
-              <label for="league">League / Competition</label>
-              <input id="league" type="text" placeholder="e.g. NFL, MLB, NBA, LMP, B1" required />
-            </div>
-            <div>
-              <label for="bookmaker">Bookmaker (optional)</label>
-              <input id="bookmaker" type="text" placeholder="e.g. Bet365, BetMGM, DraftKings, Fanduel, Caesars Sportsbook, theScore Bet" />
-            </div>
-          </div>
-
-          <div class="two">
-            <div>
-              <label for="betType">Bet Type</label>
-              <select id="betType" required>
-                <option value="">Select type…</option>
-                <option>Moneyline</option>
-                <option>Spread</option>
-                <option>Total</option>
-                <option>Prop</option>
-                <option>Parlay</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div>
-              <label for="resultStatus">Result</label>
-              <select id="resultStatus" required>
-                <option>Pending</option>
-                <option>Won</option>
-                <option>Lost</option>
-                <option>Push/Void</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label for="description">Description</label>
-            <input id="description" type="text" placeholder="e.g. Kansas City Chiefs -13.5" />
-          </div>
-
-          <div class="three">
-            <div>
-              <label for="oddsFormat">Odds Format</label>
-              <select id="oddsFormat" required>
-		<option>American</option>
-                <option>Decimal</option>
-                <option>Fractional</option>
-              </select>
-            </div>
-            <div>
-              <label for="oddsValue">Odds Value</label>
-              <input id="oddsValue" type="text" placeholder="e.g. 1.90 or -120 or 5/2" required />
-            </div>
-            <div>
-              <label for="stake">Stake</label>
-              <input id="stake" type="number" step="0.01" min="0" placeholder="e.g. 50.00" required />
-            </div>
-          </div>
-
-          <div>
-            <label for="tags">Tags / Strategy (comma-separated)</label>
-            <input id="tags" type="text" placeholder="e.g. Value, Live, Profit Boost, Bonus Bet" />
-          </div>
-
-          <div class="calc" id="calcPreview">
-            <div>Implied probability: <span id="calcProb" class="pill">—</span></div>
-            <div>Potential payout if won: <span id="calcPayout" class="pill">—</span></div>
-            <div>Potential profit if won: <span id="calcProfit" class="pill">—</span></div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <button type="submit" id="submitBtn" class="btn primary">Add Bet</button>
-            <button type="button" id="clearFormBtn" class="btn">Clear Form</button>
-            <button type="button" id="cancelEditBtn" class="btn" style="display:none">Cancel Edit</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- summary -->
-      <aside class="card">
-        <h2>Summary</h2>
-        <div class="stats" id="stats"></div>
-        <div class="section-title">By Sport (current filters)</div>
-        <div id="bySport"></div>
-      </aside>
-    </div>
-
-    <!-- charts -->
-    <section class="card" style="margin-top:16px">
-      <div class="row" style="justify-content:space-between;align-items:center">
-        <h2 style="margin:0">Charts</h2>
-        <div class="seg" id="dateSeg">
-          <button type="button" data-range="all" class="active" title="All dates">All</button>
-          <button type="button" data-range="7" title="Last 7 days">7</button>
-          <button type="button" data-range="30" title="Last 30 days">30</button>
-          <button type="button" data-range="90" title="Last 90 days">90</button>
-        </div>
-      </div>
-      <div class="charts-grid" style="margin-top:10px">
-        <div class="chart-wrap">
-          <p class="chart-title">Profit Over Time (settled bets)</p>
-          <canvas id="chartProfit"></canvas>
-        </div>
-        <div class="chart-wrap">
-          <p class="chart-title">Bets by Sport (count)</p>
-          <canvas id="chartBySport"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- table & filters -->
-    <section class="card" style="margin-top:16px">
-      <h2>Bets</h2>
-      <div class="filters">
-        <div>
-          <label>Sport filter</label>
-          <select id="filterSport">
-            <option value="">All sports</option>
-          </select>
-        </div>
-        <div>
-          <label>Result filter</label>
-          <select id="filterResult">
-            <option value="">All</option>
-            <option>Pending</option>
-            <option>Won</option>
-            <option>Lost</option>
-            <option>Push/Void</option>
-          </select>
-        </div>
-        <div>
-          <label>Search</label>
-          <input id="filterSearch" type="text" placeholder="Search description, league, tags…" />
-        </div>
-        <div style="display:flex;align-items:end">
-          <button type="button" id="clearFiltersBtn" class="btn" style="width:100%">Clear filters</button>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:8px; align-items:flex-end">
-        <div style="min-width:220px">
-          <label for="savedViewsSelect">Saved views</label>
-          <select id="savedViewsSelect">
-            <option value="" disabled selected>— Select a view —</option>
-          </select>
-        </div>
-        <button type="button" id="saveViewBtn" class="btn">Save current view</button>
-        <button type="button" id="loadViewBtn" class="btn">Load view</button>
-        <button type="button" id="deleteViewBtn" class="btn">Delete view</button>
-      </div>
-
-      <div class="overflow" style="margin-top:12px" id="tableScroller">
-        <table>
-          <thead>
-            <tr>
-              <th class="sortable" data-sort="date">Date</th>
-              <th>Sport</th>
-              <th>League</th>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Odds</th>
-              <th class="right">Stake</th>
-              <th>Result</th>
-              <th class="sortable right" data-sort="profit">Profit</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-      <div class="footer-note">Tip: `/` focuses search • `n` New bet • `↑/↓` select row • `e` edit • `Delete` remove • `f` focus sport filter.</div>
-    </section>
-
-    <!-- data -->
-    <section class="card" style="margin-top:16px">
-      <h2>Data</h2>
-      <div class="settings">
-        <div style="min-width:220px">
-          <label for="currencySymbol">Currency</label>
-          <select id="currencySymbol">
-            <option value="$">$ (USD)</option>
-            <option value="€">€ (EUR)</option>
-            <option value="£">£ (GBP)</option>
-            <option value="A$">A$ (AUD)</option>
-          </select>
-        </div>
-
-        <div style="min-width:260px">
-          <label>Import Mode</label>
-          <div class="seg" id="importModeSeg">
-            <button type="button" data-mode="strict" class="active" title="Stop on errors">Strict</button>
-            <button type="button" data-mode="lenient" title="Skip bad rows">Lenient</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:8px">
-        <button type="button" id="exportBtn" class="btn">Export JSON (download)</button>
-        <button type="button" id="showExportTextBtn" class="btn">Show JSON Text</button>
-        <button type="button" id="showImportTextBtn" class="btn">Import JSON (paste)</button>
-
-        <button type="button" id="exportCsvBtn" class="btn">Export CSV (download)</button>
-        <button type="button" id="showImportCsvTextBtn" class="btn">Import CSV (paste)</button>
-      </div>
-
-      <div class="row" style="margin-top:8px">
-        <input type="file" id="importCsvFile" accept=".csv,text/csv" />
-        <div id="csvDrop" class="dropzone" style="flex:1">Drag & drop a CSV file here to import</div>
-        <button type="button" id="resetDataBtn" class="btn danger" title="Deletes all saved bets">Reset all data</button>
-      </div>
-
-      <div id="exportTextWrap" style="display:none;margin-top:10px">
-        <div class="section-title">Exported JSON</div>
-        <textarea id="exportText" readonly></textarea>
-      </div>
-
-      <div id="importTextWrap" style="display:none;margin-top:10px">
-        <div class="section-title">Paste JSON to Import</div>
-        <textarea id="importText" placeholder='[ { "id": "...", ... } ] OR { "schemaVersion":2, "items":[...] }'></textarea>
-        <div class="row" style="margin-top:8px">
-          <button type="button" id="importBtn" class="btn primary">Import JSON</button>
-          <button type="button" id="cancelImportBtn" class="btn">Cancel</button>
-        </div>
-        <div class="footer-note">Strict: stops on errors. Lenient: skips invalid rows. Duplicates are rejected.</div>
-      </div>
-
-      <div id="importCsvWrap" style="display:none;margin-top:10px">
-        <div class="section-title">Paste CSV to Import</div>
-        <textarea id="importCsvText" placeholder='id,date,sport,league,bookmaker,betType,description,originalOddsFormat,originalOddsValue,decimalOdds,stake,resultStatus,profit,tags'></textarea>
-        <div class="row" style="margin-top:8px">
-          <button type="button" id="importCsvBtn" class="btn primary">Import CSV</button>
-          <button type="button" id="cancelImportCsvBtn" class="btn">Cancel</button>
-        </div>
-        <div class="footer-note">Headers required. Strict: stop on errors. Lenient: skip invalid rows. Duplicates are rejected.</div>
-      </div>
-
-      <div id="importReport" style="display:none;margin-top:12px">
-        <div id="importBanner" class="banner"></div>
-        <div class="report-actions">
-          <button type="button" id="copyReportBtn" class="btn">Copy report</button>
-          <button type="button" id="downloadReportBtn" class="btn">Download report (CSV)</button>
-          <button type="button" id="clearReportBtn" class="btn">Clear report</button>
-        </div>
-        <div class="overflow" style="margin-top:8px;max-height:260px">
-          <table class="report-table" id="reportTable">
-            <thead>
-              <tr><th>Source</th><th>Row / Item</th><th>Message</th><th>Fix hint</th></tr>
-            </thead>
-            <tbody id="reportBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  </div>
+<div data-widget-type="entityScores" data-entity-type="league" data-entity-id="5787" data-lang="en" data-widget-id="f99c425d-03c9-462d-a766-bd9ba1373a96" data-theme="dark"></div>
+<div id="powered-by">Powered by<a id="powered-by-link" href="https://www.365scores.com" target="_blank">365Scores.com</a></div>
+<script src="https://widgets.365scores.com/main.js"></script>
 
   <script>
     const STORAGE_KEY = "sportsBetTrackerData";
